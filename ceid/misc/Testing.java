@@ -8,9 +8,6 @@ import ceid.searching.InterpolationSearch;
 
 public class Testing {
 
-	public static void sorting() {
-
-	}
 
 	public static void searching() {
 
@@ -54,6 +51,26 @@ public class Testing {
 			System.out.println("Verification error! The Search Algs failed to find the right key!");
 		
 	}
+	
+	
+	// Sorting check functions
+    
+
+	public static void sorting() {
+		isSorted(a);
+	}
+	
+	
+	private static boolean less(int v, int w) {
+        return v-w < 0;
+    }
+        
+
+    private static boolean isSorted(int[] a) {
+        for (int i = 1; i < a.length; i++)
+            if (less(a[i], a[i-1])) return false;
+        return true;
+    }
 
 }
 

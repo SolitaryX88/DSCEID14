@@ -6,7 +6,7 @@ public class BinarySearch {
 
 	private int low = 0;
 	private int high, mid;
-	private int[] a;
+	private int[] a = null;
 	
 	
     public BinarySearch() { }
@@ -17,8 +17,8 @@ public class BinarySearch {
 
 	
 	private void inter(int arr[]){
-		high = arr.length - 1;
 		a = Arrays.copyOf(arr, arr.length);
+		high = arr.length - 1;
 	}
 	
 	public int search (int[] arr, int key){
@@ -32,12 +32,10 @@ public class BinarySearch {
 		if (a == null)
 			throw new NullPointerException();
 
-    	int lo = 0;
-        int hi = a.length - 1;
-        while (lo <= hi) {
-            int mid = lo + (hi - lo) / 2;
-            if      (key < a[mid]) hi = mid - 1;
-            else if (key > a[mid]) lo = mid + 1;
+    		while (low <= high) {
+            mid = low + (high - low) / 2;
+            if      (key < a[mid]) high = mid - 1;
+            else if (key > a[mid]) low = mid + 1;
             else return mid;
         }
         return -1;

@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class InterpolationSearch {
 	private int low = 0;
 	private int high, mid;
-	private int[] a;
+	private int[] a = null;
 	
 	public InterpolationSearch(int[] arr) {
 		inter(arr);
