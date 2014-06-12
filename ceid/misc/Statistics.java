@@ -1,3 +1,4 @@
+package ceid.misc;
 
 public class Statistics {
     private int gridSize, nExpr;

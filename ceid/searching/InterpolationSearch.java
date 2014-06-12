@@ -4,23 +4,24 @@ import java.util.Arrays;
 
 public class InterpolationSearch {
 	private int low = 0;
-	private int high;
-	private int mid;
+	private int high, mid;
 	private int[] a;
 	
 	public InterpolationSearch(int[] arr) {
-		high = arr.length - 1;
-		a = Arrays.copyOf(arr, arr.length);
+		inter(arr);
 	}
 	
 	public InterpolationSearch() {
 
 	}
 	
-	public int search (int[] arr, int key){
-		  // Returns index of toFind in sortedArray, or -1 if not found
+	private void inter(int arr[]){
 		high = arr.length - 1;
 		a = Arrays.copyOf(arr, arr.length);
+	}
+	
+	public int search (int[] arr, int key){
+		inter(arr);
 		return (search(key));
 	}
 	
@@ -30,23 +31,17 @@ public class InterpolationSearch {
 			throw new NullPointerException();
 
 		while (a[low] <= key && a[high] >= key) {
-			mid = low + ((key - a[low]) * (high - low))
-					/ (a[high] - a[low]); // out of range is
+			mid = low + ((key - a[low]) * (high - low)) / (a[high] - a[low]); // out of range is
 																
-
-			if (a[mid] < key)
-				low = mid + 1;
-			else if (a[mid] > key)
-				// Repetition of the comparison code is forced by syntax
-				// limitations.
-				high = mid - 1;
-			else
-				return mid;
+			if (a[mid] < key)low = mid + 1;
+			else if (a[mid] > key) high = mid - 1;
+			else return mid;
+			
 		}
 
 		if (a[low] == key)
 			return low;
 		else
-			return -1; // Not found
+			return -1;
 	}
 }
