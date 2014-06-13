@@ -1,37 +1,43 @@
 package ceid.misc;
 
-import java.util.Arrays;
-import java.util.Random;
+import ceid.sorting.*;
+import java.util.*;
 
 import ceid.searching.BinarySearch;
 import ceid.searching.InterpolationSearch;
 
 public class Testing {
-
-
-	public static void searching() {
-
-		int size = 10000;
+	static Random r = new Random();
+	static int mod ;
+	private static int[] randArray(){
+		return(randArray(10000));
+	}
+	
+	private static int[] randArray(int size){
 
 		int[] test = new int[size];
-		int mod = (int) (size / 1.2); // With much mod value the array has
-										// duplicate values
-										// This results in duplicate values,
-										// and the algorithm result in different
-										// positions.
+		mod = (int) (size / 1.2); // With much mod value the array has
+									  // duplicate values
 
 		Random r = new Random();
 		for (int i = 0; i < test.length; i++) {
 			test[i] = r.nextInt() % mod;
 			// System.out.println(test[i]);
 		}
+		
+		return(test);
+	}
+
+	public static void searching() {
+
+		int[] test = randArray();
 
 		Arrays.sort(test);
 
 		InterpolationSearch IS = new InterpolationSearch(test);
 		BinarySearch BS = new BinarySearch(test);
 
-		int searchInt = r.nextInt() % mod;
+		int searchInt = r.nextInt() % mod ;
 		int posIS = IS.search(searchInt);
 		int posBS = BS.search(searchInt);
 
@@ -57,28 +63,36 @@ public class Testing {
     
 
 	public static void sorting() {
-		isSorted(a);
+		int[] test = randArray();
+		
+		try {MergeSort.sort(test);
+			}catch(Exception e){
+			
+			}
+		
+		if(!isSorted(test))
+			System.out.println("MS: The Array is not sorted! :-( ");
+		else
+			System.out.println("MS: The Array is sorted! :-) ");
+		
+		int[] testb = randArray();
+		
+		QuickSort.sort(testb);
+		
+		if(!isSorted(testb))
+			System.out.println("QS: The Array is not sorted! :-( ");
+		else
+			System.out.println("QS: The Array is sorted! :-) ");
+		
 	}
 	
 	
-	private static boolean less(int v, int w) {
-        return v-w < 0;
-    }
-        
 
     private static boolean isSorted(int[] a) {
         for (int i = 1; i < a.length; i++)
-            if (less(a[i], a[i-1])) return false;
+            if (a[i]- a[i-1] < 0) return false;
         return true;
     }
 
 }
-
-
-
-
-
-
-
-
 

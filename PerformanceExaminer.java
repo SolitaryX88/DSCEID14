@@ -15,6 +15,7 @@ public class PerformanceExaminer {
 		}*/
 		
 		Testing.searching();
+		Testing.sorting();
 	}
 	
 	
