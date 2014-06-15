@@ -40,11 +40,9 @@ template<typename K> class Node234 {
 };
 
 template<typename K> int Node234<K>::MAX = 3;
-
 template<typename K> inline Node234<K>::Node234(K small) : totalItems(1)
 {
    keys[0] = small;
-
    for (int i = 0; i < MAX; i++) {
        children[i] = 0;
     }
@@ -54,7 +52,6 @@ template<typename K> inline Node234<K>::Node234(K small, K middle) : totalItems(
 {
    keys[0] = small;
    keys[1] = middle;
-
    for (int i = 0; i < MAX; i++) {
        children[i] = 0;
     }
@@ -167,33 +164,24 @@ template<typename K> void Tree234<K>::DestroyTree(Node234<K> *current)
 
       case 1: // two node
             DestroyTree(current->children[0]);
-
             DestroyTree(current->children[1]);
-
             delete current;
 
             break;
 
       case 2: // three node
             DestroyTree(current->children[0]);
-
             DestroyTree(current->children[1]);
-
             DestroyTree(current->children[2]);
-
             delete current;
 
             break;
 
       case 3: // four node
             DestroyTree(current->children[0]);
-
             DestroyTree(current->children[1]);
-
             DestroyTree(current->children[2]);
-
             DestroyTree(current->children[3]);
-
             delete current;
 
             break;
@@ -205,7 +193,7 @@ template<typename K> bool Tree234<K>::search(K key)
 {
     // make sure tree has at least one element
     if (root == 0) {
-
+       printf("Tree has not any element"); //False print
        return false;
 
     } else {
@@ -218,16 +206,12 @@ template<typename K> bool Tree234<K>::search(K key)
 template<typename K>  bool Tree234<K>::DoSearch(K key, Node234<K> *&location, int& index)
 {
   Node234<K> *current = root;
-
   if (root == 0) {
-
      return false;
   }
 
   while(true) {
-
       if (current->find(key, index)) {
-
           location = current;
           return true;
 
