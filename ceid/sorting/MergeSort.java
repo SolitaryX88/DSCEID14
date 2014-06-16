@@ -10,6 +10,11 @@ public class MergeSort {
 
 	public MergeSort(int[] arr) {
 		a  = arr;
+		this.sort();
+	}
+
+	private void sort() {
+		sort(this.a);
 	}
 
 	private static void merge(int[] a, int[] aux, int lo, int mid, int hi) {
@@ -52,10 +57,6 @@ public class MergeSort {
 		int[] aux = new int[a.length];
 		sort(a, aux, 0, a.length - 1);
 		// assert isSorted(a);
-	}
-
-	public void sort() {
-		sort(a);
 	}
 
 }

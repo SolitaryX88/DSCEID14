@@ -1,6 +1,7 @@
 package ceid.misc;
 
 import ceid.sorting.*;
+
 import java.util.*;
 
 import ceid.searching.BinarySearch;
@@ -36,7 +37,7 @@ public class Testing {
 
 		InterpolationSearch IS = new InterpolationSearch(test);
 		BinarySearch BS = new BinarySearch(test);
-
+		
 		int searchInt = r.nextInt() % mod ;
 		int posIS = IS.search(searchInt);
 		int posBS = BS.search(searchInt);
@@ -53,8 +54,8 @@ public class Testing {
 			System.out.println("Different positions in search Algs");
 		
 
-		if (test[posBS]!=searchInt || test[posIS]!=searchInt )
-			System.out.println("Verification error! The Search Algs failed to find the right key!");
+		if ((posBS != -1 && posIS != -1) && (test[posBS]!=searchInt || test[posIS]!=searchInt))
+			System.out.println("Verification error! One or both of the search Algs failed to find the right key!");
 		
 	}
 	
@@ -83,6 +84,15 @@ public class Testing {
 			System.out.println("QS: The Array is not sorted! :-( ");
 		else
 			System.out.println("QS: The Array is sorted! :-) ");
+		
+		int[] testc = randArray();
+		InsertionSort.sort(testc);
+		
+		if(!isSorted(testc))
+			System.out.println("IS: The Array is not sorted! :-( ");
+		else
+			System.out.println("IS: The Array is sorted! :-) ");
+		
 		
 	}
 	

@@ -9,9 +9,10 @@ public class QuickSort {
 
 	public QuickSort(int[] arr) {
 		this.a = arr;
+		this.sort();
 	}
 
-	public void sort() {
+	private void sort() {
 
 		sort(this.a);
 	}
