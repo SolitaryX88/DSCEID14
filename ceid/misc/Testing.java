@@ -14,7 +14,7 @@ public class Testing {
 		return(randArray(10000));
 	}
 	
-	private static int[] randArray(int size){
+	public static int[] randArray(int size){
 
 		int[] test = new int[size];
 		mod = (int) (size / 1.2); // With much mod value the array has
@@ -98,7 +98,7 @@ public class Testing {
 	
 	
 
-    private static boolean isSorted(int[] a) {
+    public static boolean isSorted(int[] a) {
         for (int i = 1; i < a.length; i++)
             if (a[i]- a[i-1] < 0) return false;
         return true;

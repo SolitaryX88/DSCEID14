@@ -5,6 +5,7 @@ package ceid.sorting;
 public class InsertionSort {
 
 	private int[] a = null;
+	public static long comp;
 
 	public InsertionSort() {
 	}
@@ -15,6 +16,7 @@ public class InsertionSort {
 	}
 
 	private void sort() {
+		comp = 0;
 		sort(this.a);
 	}
 
@@ -23,11 +25,13 @@ public class InsertionSort {
 			throw new NullPointerException();
 
 		int N = a.length;
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < N; i++, comp++) {
+			
 			for (int j = i; j > 0 && ((a[j] - a[j - 1]) < 0); j--) {
 				int swap = a[j];
 				a[j] = a[j - 1];
 				a[j - 1] = swap;
+				 comp++;
 			}
 		}
 	}

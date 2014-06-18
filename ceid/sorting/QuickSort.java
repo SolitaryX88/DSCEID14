@@ -3,7 +3,8 @@ package ceid.sorting;
 public class QuickSort {
 
 	private int[] a = null;
-
+	public static long comp;
+	
 	public QuickSort() {
 	}
 
@@ -13,7 +14,7 @@ public class QuickSort {
 	}
 
 	private void sort() {
-
+		comp = 0;
 		sort(this.a);
 	}
 
@@ -27,8 +28,10 @@ public class QuickSort {
 	}
 
 	private static void sort(int[] a, int lo, int hi) {
-		if (hi <= lo)
-			return;
+		if (hi <= lo){
+			comp++;
+			return;		
+		}
 		int j = partition(a, lo, hi);
 		sort(a, lo, j - 1);
 		sort(a, j + 1, hi);
@@ -41,15 +44,19 @@ public class QuickSort {
 		while (true) {
 
 			while ((a[++i] - v) < 0)
-				if (i == hi)
-					break;
-
+				if (i == hi){
+					comp+=2;
+					break;			
+				}
 			while ((v - a[--j]) < 0)
-				if (j == low)
+				if (j == low){
+					comp+=2;
 					break;
-
-			if (i >= j)
+				}
+			if (i >= j){
+				comp++;
 				break;
+				}
 
 			int swap = a[i];
 			a[i] = a[j];
@@ -70,11 +77,16 @@ public class QuickSort {
 		
 		int low = 0, hi = a.length - 1;
 		while (hi > low) {
+			comp++;
 			int i = partition(a, low, hi);
-			if (i > key)
+			if (i > key){
 				hi = i - 1;
-			else if (i < key)
+				comp++;
+				}
+			else if (i < key){
 				low = i + 1;
+				comp++;
+				}
 			else
 				return a[i];
 		}
