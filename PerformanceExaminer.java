@@ -1,23 +1,28 @@
-
-
+import org.apache.commons.lang3.*;
 import ceid.misc.*;
 
-
 public class PerformanceExaminer {
-	public static void main(String[] args){
-		long startTime, endTime ; // = System.nanoTime();
+	public static void main(String[] args) {
+
+		boolean test = false;
 		
-		/*
-		int[][] arr = new int[10][];
+		if (test) {
+			Testing.searching();
+			Testing.sorting();
+			System.exit(0);
+		}
 		
-		for (int i = 0 ; i<10 ; i++){
-			arr[i] = new int[(i+1)*1000]; 
-		}*/
+		long startTime, endTime; 
 		
-		Testing.searching();
-		Testing.sorting();
+		
+		for(int i = 0 ; i < 10 ; i++){
+		
+		int[] one =  new int[1000];
+		
+		ArrayUtils.reverse(one);
+		
+		}
+
 	}
-	
-	
-	
+
 }
