@@ -1,143 +1,126 @@
 package ceid.misc;
+
 import java.util.HashMap;
 
-
 public class Statistics<T extends Number> {
-	private HashMap<String, Metrics<T>> hsh = new HashMap<String, Metrics<T>>();
+	
+	private HashMap<String, Metrics<T>> hash = new HashMap<String, Metrics<T>>();
 
-	private Statistics() {
-	}
+	public Statistics() { }
+	
+	public void setNewStat(String testCase, T[] res)
+			throws IllegalArgumentException {
 
-	public void setStat(String test, T[] res) throws IllegalArgumentException {
+		if (res == null)
+			throw new NullPointerException();
 
 		for (int i = 0; i < res.length; i++)
 			if (Double.valueOf(res[i].toString()) <= 0.0)
 				throw new IllegalArgumentException();
 
+		setStat(testCase, res);
+	}
+	
+	public double getMean(String key){
+		
+		Metrics<T> m = hash.get(key);
+		
+		return m.mean;
 	}
 
-	private void setStat() {
+	public double getStd(String key){
+		
+		Metrics<T> m = hash.get(key);
+		
+		return m.stdd;
+	}
+	
+	public double getLow(String key){
+		
+		Metrics<T> m = hash.get(key);
+		
+		return m.low;
+	}
+	
+	public double getHigh(String key) {
+
+		Metrics<T> m = hash.get(key);
+
+		return m.high;
+	}
+	
+	public void printStat(String key)
+	{
+		Metrics<T> m = hash.get(key);
+
+		System.out.println(key + " Mean: "+ String.format("%.3f", m.mean) + "	Std: "+ String.format("%.3f", m.stdd) 
+				+ "	High: "+ String.format("%.3f", m.high) + "	Low: " + String.format("%.3f", m.low) );
+	}	
+	
+	public void printStatCSV(String key)
+	{
+		Metrics<T> m = hash.get(key);
+
+		System.out.println(key + ";"+ String.format("%.3f", m.mean) + ";"+ String.format("%.3f", m.stdd) 
+				+ ";"+ String.format("%.3f", m.high) + ";" + String.format("%.3f", m.low));
+	}
+	
+	public static void printStatCSVHeader() {
+		System.out.println("TestCase;" + "Mean;" + "Std;" + "High;" + "Low;");
+	}	
+	
+	private void setStat(String Key, T[] res) {
+		hash.put(Key, new Metrics<T>(res));
 	}
 
 	private class Metrics<T extends Number> {
 
-		private T mean;
-		private T err, hi, lo;
+		public double mean, stdd = 0.0;
+		public double high, low;
+		private int n;
 
 		public Metrics(T res[]) {
 
+			this.n = res.length;
+
+			this.mean = mean(res);
+			this.stdd = stddev(res);
+
+			confidenceHi();
+			confidenceLo();
 		}
 
-		private T mean(T[] res) {
-			T r;
-			initZero(r);
+		private double mean(T[] res) {
+			double r = 0.0;
+			double mean;
 			for (int i = 0; i < res.length; i++) {
-				r = add(r, res[i]);
+				r += res[i].doubleValue();
 
 			}
-			mean = div(r, res.length);
+			mean = r / res.length;
 			return mean;
 		}
 
-		private T stddev() {
-			if (nExpr == 1)
+		private double stddev(T[] res) {
+			if (res.length == 1)
 				return Double.NaN;
 			else {
-				double q = 0;
-				for (int i = 0; i < results.length; i++) {
-					q += (results[i] - mean) * (results[i] - mean);
+				double q = 0.0;
+
+				for (int i = 0; i < res.length; i++) {
+					q += (res[i].doubleValue() - this.mean)
+							* (res[i].doubleValue() - this.mean);
 				}
-				return Math.sqrt(q / (nExpr - 1));
+				return Math.sqrt(q / (res.length - 1));
 			}
 		}
 
-		private T confidenceHi() {
-			return this.mean() + 1.96 * this.stddev() / Math.sqrt(this.t);
+		private void confidenceHi() {
+			this.high = this.mean + 1.96 * this.stdd / Math.sqrt(this.n);
 		}
 
-		private T confidenceLo() {
-			return this.mean() - 1.96 * this.stddev() / Math.sqrt(this.t);
-		}
-
-		@SuppressWarnings("unchecked")
-		private T add(T one, T two) {
-
-			if (one.getClass() == Integer.class) {
-				return (T) (Integer) ((Integer) one + (Integer) two);
-			}
-			return (T) Double.valueOf(((Double) one).doubleValue()
-					+ ((Double) two).doubleValue());
-		}
-
-		@SuppressWarnings("unchecked")
-		private T mul(T one, T two) {
-
-			if (one.getClass() == Integer.class) {
-				return (T) (Integer) ((Integer) one * (Integer) two);
-			}
-			return (T) Double.valueOf(((Double) one).doubleValue()
-					* ((Double) two).doubleValue());
-		}
-
-		@SuppressWarnings("unchecked")
-		private T div(T one, T two) {
-
-			if (one.getClass() == Integer.class) {
-				return (T) (Integer) ((Integer) one / (Integer) two);
-			}
-			return (T) Double.valueOf(((Double) one).doubleValue()
-					/ ((Double) two).doubleValue());
-		}
-
-		@SuppressWarnings("unchecked")
-		private T div(T one, Integer two) {
-
-			if (one.getClass() == Integer.class) {
-				return (T) (Integer) ((Integer) one / two);
-			}
-			return (T) Double.valueOf(((Double) one).doubleValue()
-					/ two.doubleValue());
-		}
-
-		@SuppressWarnings("unchecked")
-		private T initZero(T one) {
-			if (one.getClass() == Integer.class)
-				return (T) Integer.valueOf(0);
-
-			return (T) Double.valueOf(0);
-
+		private void confidenceLo() {
+			this.low = this.mean - 1.96 * this.stdd / Math.sqrt(this.n);
 		}
 	}
-
 }
-
-/*
-    public double mean() {
-        double r = 0;
-        for (int i = 0; i < results.length; i++) {
-            r += results[i];
-        }
-        mean = r / nExpr;
-        return mean;
-    }
-
-    public double stddev() {
-        if (nExpr == 1)
-            return Double.NaN;
-        else {
-            double q = 0;
-            for (int i = 0; i < results.length; i++) {
-                q += (results[i] - mean) * (results[i] - mean);
-            }
-            return Math.sqrt(q / (nExpr - 1));
-        }
-    }
-    
-    public double confidenceHi(){
-     return this.mean() + 1.96 * this.stddev() / Math.sqrt(this.t);
-    }
-    public double confidenceLo(){
-     return this.mean() - 1.96 * this.stddev() / Math.sqrt(this.t);
-    }
-    
-*/
