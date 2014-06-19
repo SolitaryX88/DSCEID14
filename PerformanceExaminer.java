@@ -12,13 +12,13 @@ import ceid.searching.InterpolationSearch;
 import ceid.sorting.*;
 
 public class PerformanceExaminer {
-	private static boolean search = true;
-	private static boolean binarySearch = true;
+	private static boolean search = false;
+	private static boolean binarySearch = false;
 	public static void main(String[] args) {
 
 		boolean test = false;
-		boolean randArray = true;
-		boolean readFile = false;
+		boolean randArray = false;
+		boolean readFile = true;
 		if (test) {
 			Testing.searching();
 			Testing.sorting();
