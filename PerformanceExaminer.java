@@ -2,12 +2,18 @@
 import java.io.*;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 import org.apache.commons.lang3.*;
 
 import ceid.misc.*;
+import ceid.searching.BinarySearch;
+import ceid.searching.InterpolationSearch;
 import ceid.sorting.*;
 
 public class PerformanceExaminer {
+	private static boolean search = true;
+	private static boolean binarySearch = true;
 	public static void main(String[] args) {
 
 		boolean test = false;
@@ -29,6 +35,29 @@ public class PerformanceExaminer {
 
 	}
 
+	
+	private static void searchKey(int[] one) {
+
+		String key = JOptionPane.showInputDialog("Please give me a key to search: ");
+		int pos = -1;
+
+		if (binarySearch) {
+			BinarySearch bs = new BinarySearch();
+			pos = bs.search(one, Integer.parseInt(key));
+
+		} else {
+			InterpolationSearch is = new InterpolationSearch();
+			pos = is.search(one, Integer.parseInt(key));
+		}
+
+		if (pos != -1)
+			JOptionPane.showMessageDialog(null, "Key (" + key
+					+ ") found on position: " + pos);
+		else
+			JOptionPane.showMessageDialog(null, "Key (" + key + ") not found!");
+
+	}
+	
 	private static void readFromFile() {
 
 		Scanner[] scanner = new Scanner[5];
@@ -101,7 +130,11 @@ public class PerformanceExaminer {
 				timeReplIS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
 				compReplIS[j] = InsertionSort.comp;
 				InsertionSort.comp = 0;
-
+				
+				if (search) {
+					searchKey(one);
+				}
+				
 			}
 
 			comp.setNewStat("QS_" + String.valueOf(scale[i] * 1000), compReplQS);
@@ -186,7 +219,10 @@ public class PerformanceExaminer {
 				timeReplIS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
 				compReplIS[j] = InsertionSort.comp;
 				InsertionSort.comp = 0;
-
+				
+				if (search) {
+					searchKey(one);
+				}
 			}
 
 			comp.setNewStat("QS_" + String.valueOf((i + 1) * 1000), compReplQS);
