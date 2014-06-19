@@ -1,35 +1,33 @@
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.*;
 
-import ceid.misc.*;
 import ceid.searching.BinarySearch;
 import ceid.searching.InterpolationSearch;
 import ceid.sorting.*;
 
 public class PerformanceExaminer {
-	private static boolean search = true;
-	private static boolean binarySearch = true;
+	private static boolean search = false;
+	private static boolean binarySearch = false;
+	
 	public static void main(String[] args) {
 
-		boolean test = false;
 		boolean randArray = true;
-		boolean readFile = false;
-		if (test) {
-			Testing.searching();
-			Testing.sorting();
-			System.exit(0);
-		}
-
+		boolean readFile = true;
+		
+		
 		if (randArray) {
+			System.out.println("==== Random Array Results ===");
 			randomArray();
 		}
 		
 		if(readFile){
+			System.out.println("==== Read from File Results ===");
 			readFromFile();
 		}
 
@@ -86,24 +84,18 @@ public class PerformanceExaminer {
 		int repl = 15;
 		long startTime;
 
-		Statistics<Long> comp = new Statistics<Long>();
-		Statistics<Double> time = new Statistics<Double>();
-
-		String[] sortAlgs = { "QS", "MS", "IS" };
-
-		
 		for (int i = 0; i < scale.length; i++) {
 
 			System.out.println("Scale: " + scale[i] + "K");
 			
 
-			Double[] timeReplQS = new Double[repl];
-			Double[] timeReplIS = new Double[repl];
-			Double[] timeReplMS = new Double[repl];
+			double timeReplQS = 0.0;
+			double timeReplIS = 0.0;
+			double timeReplMS = 0.0;
 
-			Long[] compReplQS = new Long[repl];
-			Long[] compReplIS = new Long[repl];
-			Long[] compReplMS = new Long[repl];
+			long compReplQS = 0;
+			BigInteger compReplIS = new BigInteger("0");
+			long compReplMS = 0;
 
 			for (int j = 0; j < repl; j++) {
 
@@ -111,24 +103,24 @@ public class PerformanceExaminer {
 						
 				startTime = System.nanoTime();
 				QuickSort.sort(one);
-				timeReplQS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
-				compReplQS[j] = QuickSort.comp;
+				timeReplQS += Double.valueOf((System.nanoTime() - startTime) / 1000);
+				compReplQS += QuickSort.comp;
 				QuickSort.comp = 0;
 
 				one = Arrays.copyOf(listInt[i], listInt[i].length);
 
 				startTime = System.nanoTime();
 				MergeSort.sort(one);
-				timeReplMS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
-				compReplMS[j] = MergeSort.comp;
+				timeReplMS += Double.valueOf((System.nanoTime() - startTime) / 1000);
+				compReplMS += MergeSort.comp;
 				MergeSort.comp = 0;
 				
 				one = Arrays.copyOf(listInt[i], listInt[i].length);
 
 				startTime = System.nanoTime();
 				InsertionSort.sort(one);
-				timeReplIS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
-				compReplIS[j] = InsertionSort.comp;
+				timeReplIS += Double.valueOf((System.nanoTime() - startTime) / 1000);
+				compReplIS = compReplIS.add(BigInteger.valueOf(InsertionSort.comp));	
 				InsertionSort.comp = 0;
 				
 				if (search) {
@@ -137,62 +129,40 @@ public class PerformanceExaminer {
 				
 			}
 
-			comp.setNewStat("QS_" + String.valueOf(scale[i] * 1000), compReplQS);
-			time.setNewStat("QS_" + String.valueOf(scale[i] * 1000), timeReplQS);
-
-			comp.setNewStat("IS_" + String.valueOf(scale[i] * 1000), compReplIS);
-			time.setNewStat("IS_" + String.valueOf(scale[i] * 1000), timeReplIS);
-
-			comp.setNewStat("MS_" + String.valueOf(scale[i] * 1000), compReplMS);
-			time.setNewStat("MS_" + String.valueOf(scale[i] * 1000), timeReplMS);
-
+			System.out.println("Comp QS_" + String.valueOf(scale[i] * 1000)+" : "+compReplQS/repl);
+			System.out.println("Comp MS_" + String.valueOf(scale[i] * 1000)+" : "+compReplMS/repl);
+			System.out.println("Comp IS_" + String.valueOf(scale[i] * 1000)+" : "+compReplIS.longValue()/repl);
+			
+			System.out.println("Time QS_" + String.valueOf(scale[i] * 1000)+" : "+timeReplQS/repl);
+			System.out.println("Time MS_" + String.valueOf(scale[i] * 1000)+" : "+timeReplMS/repl);
+			System.out.println("Time IS_" + String.valueOf(scale[i] * 1000)+" : "+timeReplIS/repl);
+			System.out.println();
 		}
 
-		System.out.println();
-		Statistics.printStatCSVHeader();
-
-		for (int k = 0; k < sortAlgs.length; k++) {
-			for (int i = 0; i < scale.length; i++) {
-
-				System.out.print("Time_");
-				time.printStatCSV(sortAlgs[k]+"_"+ String.valueOf(scale[i] * 1000));
-			}
-
-			for (int i = 0; i < scale.length; i++) {
-
-				System.out.print("Compares_");
-				comp.printStatCSV(sortAlgs[k]+"_"+ String.valueOf(scale[i] * 1000));
-			}
-		}
 		
-	}
+		}
 
 	
 	private static void randomArray() {
 		int repl = 10;
 
 		long startTime;
-
-		Statistics<Long> comp = new Statistics<Long>();
-		Statistics<Double> time = new Statistics<Double>();
-
-		String[] sortAlgs = { "QS", "MS", "IS" };
-
+		
 		for (int i = 0; i < 10; i++) {
 
 			System.out.println("Scale: " + (i + 1) + "K");
 
-			Double[] timeReplQS = new Double[repl];
-			Double[] timeReplIS = new Double[repl];
-			Double[] timeReplMS = new Double[repl];
+			double timeReplQS = 0.0;
+			double timeReplIS = 0.0;
+			double timeReplMS = 0.0;
 
-			Long[] compReplQS = new Long[repl];
-			Long[] compReplIS = new Long[repl];
-			Long[] compReplMS = new Long[repl];
+			long compReplQS = 0;
+			BigInteger compReplIS = new BigInteger("0");
+			long compReplMS = 0;
 
 			for (int j = 0; j < repl; j++) {
 
-				int[] one = Testing.randArray((i + 1) * 1000);
+				int[] one = randArray((i + 1) * 1000);
 
 				MergeSort.sort(one);
 				MergeSort.comp = 0;
@@ -200,24 +170,24 @@ public class PerformanceExaminer {
 
 				startTime = System.nanoTime();
 				QuickSort.sort(one);
-				timeReplQS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
-				compReplQS[j] = QuickSort.comp;
+				timeReplQS += Double.valueOf((System.nanoTime() - startTime) / 1000);
+				compReplQS += QuickSort.comp;
 				QuickSort.comp = 0;
 
 				ArrayUtils.reverse(one);
 
 				startTime = System.nanoTime();
 				MergeSort.sort(one);
-				timeReplMS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
-				compReplMS[j] = MergeSort.comp;
+				timeReplMS += Double.valueOf((System.nanoTime() - startTime) / 1000);
+				compReplMS += MergeSort.comp;
 				MergeSort.comp = 0;
 				
 				ArrayUtils.reverse(one);
 
 				startTime = System.nanoTime();
 				InsertionSort.sort(one);
-				timeReplIS[j] = Double.valueOf((System.nanoTime() - startTime) / 1000);
-				compReplIS[j] = InsertionSort.comp;
+				timeReplIS += Double.valueOf((System.nanoTime() - startTime) / 1000);				
+				compReplIS = compReplIS.add(BigInteger.valueOf(InsertionSort.comp));	
 				InsertionSort.comp = 0;
 				
 				if (search) {
@@ -225,33 +195,30 @@ public class PerformanceExaminer {
 				}
 			}
 
-			comp.setNewStat("QS_" + String.valueOf((i + 1) * 1000), compReplQS);
-			time.setNewStat("QS_" + String.valueOf((i + 1) * 1000), timeReplQS);
+			String s = String.valueOf((i + 1) * 1000);
+			
+			System.out.println("Comp QS_" + s + " : " + compReplQS / repl);
+			System.out.println("Comp MS_" + s + " : " + compReplMS / repl);
+			System.out.println("Comp IS_" + s + " : " + compReplIS.longValue()/repl);
 
-			comp.setNewStat("IS_" + String.valueOf((i + 1) * 1000), compReplIS);
-			time.setNewStat("IS_" + String.valueOf((i + 1) * 1000), timeReplIS);
-
-			comp.setNewStat("MS_" + String.valueOf((i + 1) * 1000), compReplMS);
-			time.setNewStat("MS_" + String.valueOf((i + 1) * 1000), timeReplMS);
+			System.out.println("Time QS_" + s + " : " + timeReplQS / repl);
+			System.out.println("Time MS_" + s + " : " + timeReplMS / repl);
+			System.out.println("Time IS_" + s + " : " + timeReplIS / repl);
+			System.out.println();
 
 		}
+	}
 
-		System.out.println();
-		Statistics.printStatCSVHeader();
+	public static int[] randArray(int size) {
 
-		for (int k = 0; k < sortAlgs.length; k++) {
-			for (int i = 0; i < repl; i++) {
+		int[] test = new int[size];
+		int mod = (int) (size / 1.2); 
 
-				System.out.print("Time_");
-				time.printStatCSV(sortAlgs[k]+"_"+ String.valueOf((i + 1) * 1000));
-			}
-
-			for (int i = 0; i < repl; i++) {
-
-				System.out.print("Compares_");
-				comp.printStatCSV(sortAlgs[k]+"_"+ String.valueOf((i + 1) * 1000));
-			}
+		Random r = new Random();
+		for (int i = 0; i < test.length; i++) {
+			test[i] = r.nextInt() % mod;
 		}
 
+		return (test);
 	}
 }
